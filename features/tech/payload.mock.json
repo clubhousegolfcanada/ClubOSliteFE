@@ -1,0 +1,15 @@
+{
+  "techIssueId": "tech-021",
+  "bayNumber": 3,
+  "issueType": "ball_detection",
+  "issueDescription": "Ball not registering shots",
+  "priority": "high",
+  "status": "in-progress",
+  "source": "web",
+  "conversationHistory": [
+    "User tried restarting the sim"
+  ],
+  "reportedAt": "2025-07-15T12:40:00Z",
+  "resolvedAt": null,
+  "lastUpdated": "2025-07-15T12:50:00Z"
+}

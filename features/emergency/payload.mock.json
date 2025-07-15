@@ -1,0 +1,15 @@
+{
+  "emergencyId": "emg-007",
+  "bayNumber": 4,
+  "issueType": "sim_frozen",
+  "issueDescription": "Simulator frozen on home screen",
+  "priority": "critical",
+  "status": "open",
+  "source": "manual",
+  "conversationHistory": [
+    "Reported by customer onsite"
+  ],
+  "reportedAt": "2025-07-15T12:55:00Z",
+  "resolvedAt": null,
+  "lastUpdated": "2025-07-15T13:00:00Z"
+}
