@@ -1,0 +1,134 @@
+ClubOS-Lite Front End Structure
+ClubOSLiteFrontend/
+├── index.html                      # Static shell — already compatible
+├── manifest.json
+├── favicon.ico
+├── README.md
+├── project.json                   # Optional dynamic config (e.g. wrapper meta)
+│
+├── /features/                     # 1:1 with LLM wrappers
+│   ├── booking/
+│   │   ├── BookingForm.js
+│   │   ├── booking-api.js
+│   │   ├── booking.css
+│   │   └── payload.mock.json
+│   ├── emergency/
+│   │   ├── EmergencyForm.js
+│   │   ├── emergency-api.js
+│   │   ├── emergency.css
+│   │   └── payload.mock.json
+│   ├── trackman/
+│   │   ├── TrackmanForm.js
+│   │   ├── trackman-api.js
+│   │   ├── trackman.css
+│   │   └── payload.mock.json
+│   ├── clubhouseinfo/
+│   │   ├── InfoForm.js
+│   │   ├── info-api.js
+│   │   └── payload.mock.json
+│   ├── responsetone/
+│   │   ├── ToneForm.js
+│   │   ├── tone-api.js
+│   │   └── payload.mock.json
+│   └── vanilla/
+│       ├── VanillaForm.js
+│       ├── vanilla-api.js
+│       └── payload.mock.json
+│
+├── /llm/                          # Shared LLM interface logic
+│   ├── index.js                   # sendToLLM / fetch logic
+│   ├── responseParser.js         # formats LLM output into DOM
+│   ├── templateLoader.js         # loads preset demos
+│   ├── llmDispatcher.js          # maps route to wrapper
+│   └── mockResponse.json         # fallback/dev response
+│
+├── /scripts/                     # Global runtime helpers
+│   ├── AppController.js          # NEW: Orchestrates whole form flow
+│   ├── state.js                  # Global store / recent tasks
+│   ├── telemetry.js              # Logs + analytics
+│   ├── health.js                 # Backend health check
+│   └── config.js                 # Theme, constants, URLs
+│
+├── /components/                  # Shared UI elements
+│   ├── TaskCard.js
+│   ├── TabSwitcher.js
+│   ├── Modal.js
+│   └── Spinner.js
+│
+├── /layout/                      # Site frame
+│   ├── Shell.js
+│   ├── NavBar.js
+│   └── Footer.js
+│
+├── /styles/                      # Modular CSS
+│   ├── main.css
+│   ├── responsive.css
+│   ├── theme.css
+│   └── layout.css
+│
+├── /data/                        # Static JSON
+│   ├── routes.json               # Maps task types to wrapper
+│   └── demoSessions.json         # Preset demos (used by Demo button)
+│
+└── /tests/
+    ├── mock-health.json
+    ├── mock-llm-errors.json
+    └── mock-requests.json
+
+
+{
+  "bookingId": "string",
+  "userId": "string",
+  "userName": "string",
+  "bayNumber": "integer",
+  "startTime": "ISO8601 datetime",
+  "endTime": "ISO8601 datetime",
+  "status": "pending|confirmed|cancelled|error",
+  "accessCode": "string|null",
+  "issueType": "no_access|missing_code|duplicate_booking|wrong_time|other|null",
+  "issueDetails": "string|null",
+  "source": "web|openphone|manual",
+  "conversationHistory": ["string"],
+  "createdAt": "ISO8601 datetime",
+  "lastUpdated": "ISO8601 datetime"
+}
+{
+  "emergencyId": "string",
+  "bayNumber": "integer",
+  "issueType": "sim_frozen|no_power|system_failure|trackman_fail|other",
+  "issueDescription": "string",
+  "priority": "high|critical",
+  "status": "open|in-progress|resolved",
+  "source": "web|openphone|manual",
+  "conversationHistory": ["string"],
+  "reportedAt": "ISO8601 datetime",
+  "resolvedAt": "ISO8601 datetime|null",
+  "lastUpdated": "ISO8601 datetime"
+}
+
+{
+  "techIssueId": "string",
+  "bayNumber": "integer",
+  "issueType": "ball_detection|login_failure|screen_failure|wifi_issue|app_glitch|other",
+  "issueDescription": "string",
+  "priority": "medium|high",
+  "status": "open|in-progress|resolved",
+  "source": "web|openphone|manual",
+  "conversationHistory": ["string"],
+  "reportedAt": "ISO8601 datetime",
+  "resolvedAt": "ISO8601 datetime|null",
+  "lastUpdated": "ISO8601 datetime"
+}
+
+{
+  "generalId": "string",
+  "userId": "string|anonymous",
+  "category": "feedback|billing|lost_item|inquiry|policy|misc",
+  "message": "string",
+  "handled": "boolean",
+  "source": "web|openphone|manual",
+  "conversationHistory": ["string"],
+  "submittedAt": "ISO8601 datetime",
+  "handledAt": "ISO8601 datetime|null",
+  "lastUpdated": "ISO8601 datetime"
+}
