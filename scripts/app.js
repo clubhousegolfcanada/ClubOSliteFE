@@ -215,11 +215,31 @@ window.ClubOS.MainFormManager = {
 window.ClubOS.HealthCheck = {
     interval: null,
     isOnline: true,
+    eventHandlers: {
+        online: null,
+        offline: null
+    },
     
     init() {
         this.checkHealth();
         this.startMonitoring();
         this.bindOfflineEvents();
+    },
+    
+    destroy() {
+        // Clean up to prevent memory leaks
+        this.stopMonitoring();
+        
+        // Remove event listeners
+        if (this.eventHandlers.online) {
+            window.removeEventListener('online', this.eventHandlers.online);
+        }
+        if (this.eventHandlers.offline) {
+            window.removeEventListener('offline', this.eventHandlers.offline);
+        }
+        
+        // Remove any UI elements
+        this.hideBanner();
     },
     
     async checkHealth() {
@@ -253,14 +273,18 @@ window.ClubOS.HealthCheck = {
     },
     
     bindOfflineEvents() {
-        window.addEventListener('online', () => {
+        // Store references for cleanup
+        this.eventHandlers.online = () => {
             this.setOnlineStatus(true);
             this.checkHealth();
-        });
+        };
         
-        window.addEventListener('offline', () => {
+        this.eventHandlers.offline = () => {
             this.setOnlineStatus(false);
-        });
+        };
+        
+        window.addEventListener('online', this.eventHandlers.online);
+        window.addEventListener('offline', this.eventHandlers.offline);
     },
     
     setOnlineStatus(isOnline) {

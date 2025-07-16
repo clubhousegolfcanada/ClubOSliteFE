@@ -38,20 +38,22 @@ class AppController {
     }
     
     cacheElements() {
+        // Use optimized DOM cache
+        const cache = window.ClubOS.DOMCache;
         this.elements = {
-            form: document.getElementById('taskForm'),
-            taskInput: document.getElementById('taskInput'),
-            locationInput: document.getElementById('locationInput'),
+            form: cache.getById('taskForm'),
+            taskInput: cache.getById('taskInput'),
+            locationInput: cache.getById('locationInput'),
             priorityInputs: document.querySelectorAll('input[name="priority"]'),
             routeInputs: document.querySelectorAll('input[name="llm_route"]'),
-            useLLMToggle: document.getElementById('useLLM'),
-            submitBtn: document.getElementById('submitBtn'),
-            resetBtn: document.getElementById('resetBtn'),
-            errorMessage: document.getElementById('errorMessage'),
-            responseArea: document.getElementById('responseArea'),
-            recentTasksContainer: document.getElementById('recentTasks'),
-            slackIndicator: document.getElementById('slackIndicator'),
-            llmToggleHelper: document.getElementById('llmToggleHelper')
+            useLLMToggle: cache.getById('useLLM'),
+            submitBtn: cache.getById('submitBtn'),
+            resetBtn: cache.getById('resetBtn'),
+            errorMessage: cache.getById('errorMessage'),
+            responseArea: cache.getById('responseArea'),
+            recentTasksContainer: cache.getById('recentTasks'),
+            slackIndicator: cache.getById('slackIndicator'),
+            llmToggleHelper: cache.getById('llmToggleHelper')
         };
     }
     
@@ -247,10 +249,26 @@ class AppController {
     }
     
     async sendLLMRequest(payload) {
+        // Check cache first
+        if (window.ClubOS.APICache) {
+            const cached = window.ClubOS.APICache.get(this.config.API_ENDPOINT, payload);
+            if (cached) {
+                console.log('Using cached response');
+                return cached;
+            }
+        }
+        
         if (this.config.MOCK_MODE) {
             // Mock response for testing
             await this.simulateDelay(1500);
-            return this.getMockResponse(payload.route);
+            const response = this.getMockResponse(payload.route);
+            
+            // Cache the mock response
+            if (window.ClubOS.APICache) {
+                window.ClubOS.APICache.set(this.config.API_ENDPOINT, payload, response);
+            }
+            
+            return response;
         }
         
         const response = await fetch(this.config.API_ENDPOINT, {
@@ -266,7 +284,14 @@ class AppController {
             throw new Error(`API request failed: ${response.statusText}`);
         }
         
-        return await response.json();
+        const data = await response.json();
+        
+        // Cache successful responses
+        if (window.ClubOS.APICache) {
+            window.ClubOS.APICache.set(this.config.API_ENDPOINT, payload, data);
+        }
+        
+        return data;
     }
     
     async processSlackRequest(formData) {
@@ -309,22 +334,40 @@ class AppController {
     handleLLMToggle(e) {
         const isEnabled = e.target.checked;
         
-        // Update UI
+        // Get UI elements
+        const routeOptions = document.querySelectorAll('.route-option');
+        const llmRouteLabel = document.querySelector('#llmRouteGroup .form-label');
+        
+        // Update route inputs
         this.elements.routeInputs.forEach(input => {
             input.disabled = !isEnabled;
         });
+        
+        // Update route options visual state
+        routeOptions.forEach(option => {
+            option.style.opacity = isEnabled ? '1' : '0.5';
+            option.style.cursor = isEnabled ? 'pointer' : 'not-allowed';
+        });
+        
+        // Update route label
+        if (llmRouteLabel) {
+            llmRouteLabel.style.opacity = isEnabled ? '1' : '0.5';
+            llmRouteLabel.innerHTML = isEnabled 
+                ? 'Force LLM Route (optional)' 
+                : 'Force LLM Route (disabled - sending to Slack)';
+        }
         
         // Toggle visual indicators
         if (isEnabled) {
             this.elements.slackIndicator.style.display = 'none';
             this.elements.llmToggleHelper.style.display = 'none';
             this.elements.submitBtn.classList.remove('slack-mode');
-            this.elements.submitBtn.textContent = 'Process Request';
+            this.elements.submitBtn.innerHTML = 'Process Request';
         } else {
             this.elements.slackIndicator.style.display = 'inline';
             this.elements.llmToggleHelper.style.display = 'block';
             this.elements.submitBtn.classList.add('slack-mode');
-            this.elements.submitBtn.textContent = 'Send to Slack';
+            this.elements.submitBtn.innerHTML = 'Send to Slack';
         }
     }
     
@@ -370,7 +413,8 @@ class AppController {
         
         if (isProcessing) {
             this.elements.submitBtn.disabled = true;
-            this.elements.submitBtn.innerHTML = '<span class="spinner"></span> Processing...';
+            const loadingText = this.elements.useLLMToggle.checked ? 'Processing...' : 'Sending to Slack...';
+            this.elements.submitBtn.innerHTML = `<span class="spinner"></span> ${loadingText}`;
             this.elements.resetBtn.disabled = true;
         } else {
             this.elements.submitBtn.disabled = false;

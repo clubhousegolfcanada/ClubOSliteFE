@@ -36,9 +36,17 @@ class BaseFormHandler {
         
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         
-        // Add field-specific listeners
+        // Add field-specific listeners with debouncing
+        const debouncedValidation = window.ClubOS.Utils ? 
+            window.ClubOS.Utils.debounce((field) => this.handleFieldChange(field), 300) : 
+            (field) => this.handleFieldChange(field);
+            
         this.form.querySelectorAll('input, textarea, select').forEach(field => {
             field.addEventListener('change', () => this.handleFieldChange(field));
+            // Add debounced validation on input
+            if (field.type === 'text' || field.tagName === 'TEXTAREA') {
+                field.addEventListener('input', () => debouncedValidation(field));
+            }
         });
     }
     

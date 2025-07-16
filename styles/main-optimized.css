@@ -1,0 +1,183 @@
+/* ClubOS Lite - Consolidated Main Styles */
+
+/* Import all component styles in order */
+@import url('theme.css');
+@import url('layout.css');
+@import url('form.css');
+@import url('cards.css');
+@import url('responsive.css');
+
+/* Additional optimizations and overrides */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Optimize font loading */
+.fonts-loading * {
+    opacity: 0;
+}
+
+.fonts-loaded * {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Hardware acceleration for transforms */
+.card,
+.btn,
+.route-option,
+.toggle-switch,
+.modal,
+.notification {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* Optimize animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 10px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Remove unnecessary animations on mobile */
+@media (max-width: 640px) {
+    .card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .btn:hover {
+        transform: none;
+    }
+    
+    .route-option:hover {
+        transform: none;
+    }
+}
+
+/* Optimize loading states */
+.skeleton-loader {
+    background-image: linear-gradient(
+        90deg,
+        var(--bg-tertiary) 0%,
+        var(--border-primary) 50%,
+        var(--bg-tertiary) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Optimize form inputs for mobile */
+@media (max-width: 640px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    textarea,
+    select {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+}
+
+/* Optimize scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* Print styles */
+@media print {
+    .header-actions,
+    .btn,
+    .toggle-group,
+    .route-selector,
+    .shortcuts-hint {
+        display: none !important;
+    }
+    
+    .card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    
+    body {
+        color: #000;
+        background: #fff;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --accent: #0066cc;
+        --status-error: #cc0000;
+        --status-success: #007700;
+    }
+    
+    .btn {
+        border: 2px solid currentColor;
+    }
+}
+
+/* Loading performance optimization */
+.lazy-load {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.lazy-load.loaded {
+    opacity: 1;
+}
+
+/* Reduce paint areas */
+.response-area,
+.modal-overlay,
+.notification-container {
+    contain: layout style paint;
+}
+
+/* Optimize touch targets for mobile */
+@media (pointer: coarse) {
+    .btn,
+    .route-option,
+    input[type="checkbox"],
+    input[type="radio"] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClubOS Performance Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 0.5rem;
+        }
+        .metric {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .metric-name {
+            font-weight: 600;
+            color: #555;
+        }
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+        .good { color: #10b981; }
+        .warning { color: #f59e0b; }
+        .bad { color: #ef4444; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        #results {
+            margin-top: 2rem;
+        }
+        .test-section {
+            margin: 2rem 0;
+        }
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>ClubOS Performance Test Suite</h1>
+    
+    <div class="test-section">
+        <h2>Quick Tests</h2>
+        <button onclick="runPerformanceTest()">Run Performance Test</button>
+        <button onclick="testDOMCache()">Test DOM Cache</button>
+        <button onclick="testAPICache()">Test API Cache</button>
+        <button onclick="testDebounce()">Test Debounce</button>
+        <button onclick="measureMemory()">Measure Memory</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `metric ${type}`;
+            div.innerHTML = `<span class="metric-name">${message}</span>`;
+            results.appendChild(div);
+        }
+
+        function logMetric(name, value, unit = 'ms') {
+            const div = document.createElement('div');
+            div.className = 'metric';
+            
+            // Determine color based on value
+            let colorClass = 'good';
+            if (unit === 'ms') {
+                if (value > 100) colorClass = 'warning';
+                if (value > 500) colorClass = 'bad';
+            }
+            
+            div.innerHTML = `
+                <span class="metric-name">${name}</span>
+                <span class="metric-value ${colorClass}">${value.toFixed(2)} ${unit}</span>
+            `;
+            results.appendChild(div);
+        }
+
+        async function runPerformanceTest() {
+            results.innerHTML = '<h2>Performance Test Results</h2>';
+            
+            // Test 1: Page Load Metrics
+            if (window.performance && window.performance.timing) {
+                const timing = window.performance.timing;
+                logMetric('DOM Content Loaded', timing.domContentLoadedEventEnd - timing.navigationStart);
+                logMetric('Page Load Complete', timing.loadEventEnd - timing.navigationStart);
+            }
+
+            // Test 2: First Paint
+            const paintEntries = performance.getEntriesByType('paint');
+            paintEntries.forEach(entry => {
+                logMetric(entry.name, entry.startTime);
+            });
+
+            // Test 3: Resource Loading
+            const resources = performance.getEntriesByType('resource');
+            const jsResources = resources.filter(r => r.name.includes('.js'));
+            const cssResources = resources.filter(r => r.name.includes('.css'));
+            
+            logMetric('JavaScript Files Loaded', jsResources.length, 'files');
+            logMetric('CSS Files Loaded', cssResources.length, 'files');
+            
+            const totalJSSize = jsResources.reduce((sum, r) => sum + (r.transferSize || 0), 0);
+            const totalCSSSize = cssResources.reduce((sum, r) => sum + (r.transferSize || 0), 0);
+            
+            logMetric('Total JS Size', totalJSSize / 1024, 'KB');
+            logMetric('Total CSS Size', totalCSSSize / 1024, 'KB');
+
+            // Test 4: ClubOS Specific Metrics
+            if (window.ClubOS && window.ClubOS.optimize) {
+                const report = window.ClubOS.optimize.getPerformanceReport();
+                log(`<pre>${JSON.stringify(report, null, 2)}</pre>`);
+            }
+        }
+
+        function testDOMCache() {
+            results.innerHTML = '<h2>DOM Cache Test</h2>';
+            
+            if (!window.ClubOS || !window.ClubOS.DOMCache) {
+                log('DOM Cache not available', 'warning');
+                return;
+            }
+
+            // Test cache performance
+            const iterations = 10000;
+            
+            // Without cache
+            const start1 = performance.now();
+            for (let i = 0; i < iterations; i++) {
+                document.getElementById('taskInput');
+            }
+            const time1 = performance.now() - start1;
+            
+            // With cache
+            const start2 = performance.now();
+            for (let i = 0; i < iterations; i++) {
+                window.ClubOS.DOMCache.getById('taskInput');
+            }
+            const time2 = performance.now() - start2;
+            
+            logMetric('Without Cache (10k queries)', time1);
+            logMetric('With Cache (10k queries)', time2);
+            logMetric('Performance Improvement', ((time1 - time2) / time1 * 100), '%');
+            
+            log(`Cache size: ${window.ClubOS.DOMCache.elements.size} elements`);
+        }
+
+        function testAPICache() {
+            results.innerHTML = '<h2>API Cache Test</h2>';
+            
+            if (!window.ClubOS || !window.ClubOS.APICache) {
+                log('API Cache not available', 'warning');
+                return;
+            }
+
+            // Test cache functionality
+            const testPayload = { task: 'test', route: 'auto' };
+            const testResponse = { status: 'success', data: 'test' };
+            
+            // Set cache
+            window.ClubOS.APICache.set('/api/test', testPayload, testResponse);
+            
+            // Get from cache
+            const cached = window.ClubOS.APICache.get('/api/test', testPayload);
+            
+            if (cached && cached.status === 'success') {
+                log('✅ API Cache working correctly', 'good');
+                logMetric('Cache Entries', window.ClubOS.APICache.cache.size, 'items');
+            } else {
+                log('❌ API Cache not working', 'bad');
+            }
+        }
+
+        async function testDebounce() {
+            results.innerHTML = '<h2>Debounce Test</h2>';
+            
+            if (!window.ClubOS || !window.ClubOS.Utils || !window.ClubOS.Utils.debounce) {
+                log('Debounce utility not available', 'warning');
+                return;
+            }
+
+            let callCount = 0;
+            const debouncedFn = window.ClubOS.Utils.debounce(() => {
+                callCount++;
+            }, 300);
+
+            log('Calling function 10 times rapidly...');
+            
+            for (let i = 0; i < 10; i++) {
+                debouncedFn();
+                await new Promise(resolve => setTimeout(resolve, 50));
+            }
+
+            // Wait for debounce to complete
+            await new Promise(resolve => setTimeout(resolve, 400));
+            
+            logMetric('Function Calls (without debounce)', 10, 'calls');
+            logMetric('Function Calls (with debounce)', callCount, 'calls');
+            logMetric('Calls Prevented', 10 - callCount, 'calls');
+        }
+
+        function measureMemory() {
+            results.innerHTML = '<h2>Memory Usage</h2>';
+            
+            if (!performance.memory) {
+                log('Memory API not available (Chrome only)', 'warning');
+                return;
+            }
+
+            const mb = (bytes) => (bytes / 1048576).toFixed(2);
+            
+            logMetric('Used JS Heap', mb(performance.memory.usedJSHeapSize), 'MB');
+            logMetric('Total JS Heap', mb(performance.memory.totalJSHeapSize), 'MB');
+            logMetric('JS Heap Limit', mb(performance.memory.jsHeapSizeLimit), 'MB');
+            
+            const usage = (performance.memory.usedJSHeapSize / performance.memory.jsHeapSizeLimit * 100);
+            logMetric('Memory Usage', usage, '%');
+        }
+
+        // Auto-run basic test on load
+        window.addEventListener('load', () => {
+            setTimeout(runPerformanceTest, 100);
+        });
+    </script>
+</body>
+</html>

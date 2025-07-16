@@ -6,13 +6,31 @@
   "scripts": {
     "start": "python3 -m http.server 8000",
     "serve": "npx http-server -p 8000",
-    "dev": "npx live-server --port=8000"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "optimize:css": "postcss styles/**/*.css --dir dist/styles",
+    "analyze": "vite build --mode analyze",
+    "lighthouse": "lighthouse http://localhost:8000 --view"
   },
   "keywords": ["clubos", "golf", "task-management", "frontend"],
   "author": "ClubOS Team",
   "license": "UNLICENSED",
   "devDependencies": {
-    "http-server": "^14.1.1",
-    "live-server": "^1.2.2"
-  }
+    "vite": "^5.0.0",
+    "terser": "^5.24.0",
+    "cssnano": "^6.0.0",
+    "postcss": "^8.4.0",
+    "postcss-cli": "^11.0.0",
+    "autoprefixer": "^10.4.0",
+    "@vitejs/plugin-legacy": "^5.0.0",
+    "rollup-plugin-visualizer": "^5.9.0",
+    "lighthouse": "^11.0.0"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "Firefox ESR",
+    "not dead"
+  ]
 }
