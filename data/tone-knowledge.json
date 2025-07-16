@@ -1,0 +1,111 @@
+{
+  "route": "ResponseToneLLM",
+  "description": "Customer service tone and communication guidelines",
+  "knowledgeBase": {
+    "toneGuidelines": {
+      "professional": {
+        "characteristics": ["Courteous", "Clear", "Respectful", "Solution-focused"],
+        "phrases": [
+          "I'd be happy to assist you with that",
+          "Thank you for your patience",
+          "I understand your concern",
+          "Let me find the best solution for you"
+        ],
+        "avoid": ["Slang", "Overly casual language", "Blame", "Excuses"]
+      },
+      "empathetic": {
+        "situations": ["Complaints", "Frustrations", "Bad experiences"],
+        "phrases": [
+          "I completely understand how frustrating that must be",
+          "I sincerely apologize for the inconvenience",
+          "Your experience is important to us",
+          "Let's make this right"
+        ],
+        "actions": ["Listen fully", "Acknowledge feelings", "Offer solutions", "Follow up"]
+      },
+      "friendly": {
+        "characteristics": ["Warm", "Approachable", "Positive", "Helpful"],
+        "phrases": [
+          "Great choice!",
+          "You're all set!",
+          "Enjoy your session!",
+          "Looking forward to seeing you!"
+        ]
+      }
+    },
+    "difficultSituations": {
+      "angryCustomer": {
+        "approach": "Stay calm, don't take it personally",
+        "steps": [
+          "Let them vent without interrupting",
+          "Acknowledge their frustration",
+          "Apologize for the situation (not fault)",
+          "Focus on solutions",
+          "Involve manager if needed"
+        ],
+        "phrases": [
+          "I can see why you'd be upset",
+          "That's definitely not the experience we want you to have",
+          "Let me personally ensure this gets resolved"
+        ]
+      },
+      "unreasonableRequests": {
+        "approach": "Be firm but kind",
+        "phrases": [
+          "I understand what you're looking for, however...",
+          "While I can't do X, I can offer Y",
+          "Our policy is in place to ensure fairness for all customers",
+          "Here's what I can do for you instead..."
+        ]
+      },
+      "technicalComplaints": {
+        "approach": "Show competence while being understanding",
+        "phrases": [
+          "Technology can be frustrating sometimes",
+          "Let me walk you through this step by step",
+          "I'll make sure this is working perfectly before you start",
+          "Thank you for your patience while we sort this out"
+        ]
+      }
+    },
+    "channelSpecific": {
+      "phone": {
+        "greeting": "Thank you for calling [Location] Golf Club, this is [Name], how may I help you today?",
+        "hold": "May I place you on a brief hold while I look into that for you?",
+        "closing": "Thank you for calling. Have a wonderful day!"
+      },
+      "inPerson": {
+        "greeting": "Welcome to [Location] Golf Club! How can I help you today?",
+        "bodyLanguage": "Smile, eye contact, open posture",
+        "closing": "Enjoy your session! Let us know if you need anything."
+      },
+      "email": {
+        "greeting": "Dear [Name], Thank you for contacting us.",
+        "structure": "Clear subject, brief paragraphs, bullet points for multiple items",
+        "closing": "Best regards, [Name], [Location] Golf Club Team"
+      }
+    },
+    "brandVoice": {
+      "personality": "Professional yet approachable, knowledgeable but not condescending",
+      "values": "Customer-first, solution-oriented, quality experience",
+      "vocabulary": {
+        "preferred": ["session", "experience", "assist", "certainly"],
+        "avoid": ["nope", "yeah", "can't", "won't"]
+      }
+    },
+    "templates": {
+      "apology": "I sincerely apologize for [specific issue]. To make this right, I'd like to [specific solution].",
+      "explanation": "Let me explain what happened: [brief explanation]. Here's what we're doing to fix it: [solution].",
+      "gratitude": "Thank you so much for [specific action]. We really appreciate [specific impact].",
+      "followUp": "I wanted to check in and make sure [specific issue] was fully resolved to your satisfaction."
+    }
+  },
+  "qualityChecklist": [
+    "Did I acknowledge the customer's concern?",
+    "Did I provide a clear solution or next step?",
+    "Was my tone appropriate to the situation?",
+    "Did I use positive language?",
+    "Did I invite further questions?",
+    "Would I be happy receiving this response?"
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "route": "BookingLLM",
+  "description": "Booking management, reservations, and scheduling",
+  "knowledgeBase": {
+    "policies": {
+      "cancellation": {
+        "window": "24 hours advance notice required",
+        "fee": "50% charge for late cancellations",
+        "noShow": "100% charge for no-shows",
+        "exceptions": [
+          "Medical emergencies (with documentation)",
+          "Severe weather warnings",
+          "Facility closures"
+        ]
+      },
+      "booking": {
+        "maxAdvance": "14 days",
+        "maxDuration": "2 hours per session",
+        "maxGroupSize": "6 people per bay",
+        "minAge": "6 years with adult supervision"
+      },
+      "pricing": {
+        "peakHours": {
+          "times": "Mon-Fri 5pm-10pm, Sat-Sun 10am-10pm",
+          "rate": "$65/hour"
+        },
+        "offPeak": {
+          "times": "Mon-Fri 10am-5pm",
+          "rate": "$45/hour"
+        },
+        "lateNight": {
+          "times": "Daily 10pm-12am",
+          "rate": "$40/hour"
+        }
+      }
+    },
+    "commonRequests": {
+      "groupBooking": {
+        "8-12 people": "Book 2 adjacent bays",
+        "13-18 people": "Book 3 adjacent bays",
+        "19+ people": "Requires event coordinator approval",
+        "corporateEvents": "Transfer to events@golfclub.com"
+      },
+      "modifications": {
+        "timeChange": "Subject to availability, no fee if 24h notice",
+        "addTime": "Check adjacent slots, pro-rate additional time",
+        "changeDate": "Treat as cancellation + new booking"
+      }
+    },
+    "systemInstructions": {
+      "checkAvailability": [
+        "Open booking system",
+        "Select location (Halifax/Dartmouth/Bedford)",
+        "Check requested date/time",
+        "Verify bay availability"
+      ],
+      "processBooking": [
+        "Enter customer details",
+        "Select bay number",
+        "Confirm duration",
+        "Process payment",
+        "Send confirmation email"
+      ],
+      "handleConflicts": [
+        "Offer alternative times (within 2 hours)",
+        "Offer alternative days",
+        "Suggest off-peak for better rates",
+        "Add to waitlist if requested"
+      ]
+    },
+    "specialSituations": {
+      "tournaments": "Refer to tournament coordinator",
+      "privateLessons": "Check instructor availability first",
+      "equipmentRequests": "Note in booking (left-handed, junior clubs)",
+      "accessibility": "Bays 1 and 6 are fully accessible"
+    }
+  },
+  "customerServiceScripts": {
+    "greeting": "Thank you for choosing [Location] Golf Club. I'd be happy to help you with your booking.",
+    "fullBooked": "I'm sorry, but we're fully booked for that time. I can offer you [alternative time] or put you on our waitlist.",
+    "confirmation": "Perfect! I've booked Bay [X] for you on [date] at [time] for [duration]. You'll receive a confirmation email shortly.",
+    "cancellationPolicy": "Just a reminder that we require 24 hours notice for cancellations to avoid a fee. Will that work for you?"
+  }
+}

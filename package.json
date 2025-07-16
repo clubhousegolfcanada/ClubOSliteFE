@@ -1,0 +1,18 @@
+{
+  "name": "clubos-lite-fe",
+  "version": "1.0.0",
+  "description": "ClubOS Lite - Frontend for golf facility task management",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "serve": "npx http-server -p 8000",
+    "dev": "npx live-server --port=8000"
+  },
+  "keywords": ["clubos", "golf", "task-management", "frontend"],
+  "author": "ClubOS Team",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  }
+}

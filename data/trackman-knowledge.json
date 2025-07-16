@@ -1,0 +1,102 @@
+{
+  "route": "TrackManLLM",
+  "description": "TrackMan technical support and troubleshooting",
+  "knowledgeBase": {
+    "commonIssues": {
+      "frozen": {
+        "symptoms": ["Screen frozen", "Unresponsive to touch", "Can't start new game"],
+        "solutions": [
+          "Access bay PC via Splashtop",
+          "Close TrackMan from taskbar (right-click > Close)",
+          "Relaunch from desktop shortcut",
+          "Wait 30-45 seconds for initialization",
+          "If persists, restart entire PC"
+        ],
+        "customerScript": "I'll reset the system for you. This will take about 2 minutes, then you can restart from My Activities."
+      },
+      "noRadar": {
+        "symptoms": ["'Radar not connected' message", "No ball tracking", "Practice mode only"],
+        "solutions": [
+          "Check radar power cable (green light should be on)",
+          "Verify ethernet cable to radar",
+          "In TrackMan software: Settings > Radar > Reconnect",
+          "Power cycle radar (unplug 10 seconds)",
+          "If failed, move customer to different bay"
+        ]
+      },
+      "calibration": {
+        "symptoms": ["Shots going wrong direction", "Distance way off", "Hitting trees/objects in game"],
+        "solutions": [
+          "Settings > Calibration > Auto-Calibrate",
+          "Ensure hitting mat is aligned with markers",
+          "Check radar positioning (should be centered)",
+          "Manual calibration if auto fails",
+          "Document bay number for maintenance"
+        ]
+      },
+      "audioIssues": {
+        "symptoms": ["No sound", "Audio cutting out", "Echo/feedback"],
+        "solutions": [
+          "Check Windows volume (bottom right)",
+          "TrackMan Settings > Audio > Reset",
+          "Verify TV audio input",
+          "Check audio cable connections",
+          "Restart TrackMan if needed"
+        ]
+      }
+    },
+    "systemAccess": {
+      "splashtop": {
+        "credentials": "Username: support / Password: TrackM@n2024",
+        "bayNaming": "[LOCATION]-BAY[#]-PC (e.g., HAL-BAY3-PC)",
+        "notes": "Always log off when done"
+      },
+      "localPC": {
+        "location": "Cabinet below hitting area",
+        "password": "Bay2024!",
+        "restrictions": "Only access if Splashtop fails"
+      }
+    },
+    "preventiveMeasures": {
+      "daily": [
+        "Check all bays at opening",
+        "Verify radar lights are green",
+        "Test one shot per bay",
+        "Clean hitting mats"
+      ],
+      "weekly": [
+        "Restart all PCs Sunday night",
+        "Clean radar lenses",
+        "Check all cable connections",
+        "Update maintenance log"
+      ]
+    },
+    "escalation": {
+      "level1": "Shift supervisor",
+      "level2": "Technical manager: 902-555-TECH",
+      "level3": "TrackMan support: 1-877-TRACKMAN",
+      "emergency": "If multiple bays down: GM immediately"
+    },
+    "customerCompensation": {
+      "minor": "10-15 min issue: Extend session 30 minutes",
+      "moderate": "15-30 min issue: Free hour voucher",
+      "major": "30+ min or bay move: Full refund + free hour",
+      "policy": "Always apologize and document in system"
+    }
+  },
+  "quickReference": {
+    "restartSteps": [
+      "Windows key > Power > Restart",
+      "Wait for full reboot (2-3 minutes)",
+      "TrackMan auto-launches",
+      "Verify radar connection",
+      "Test with customer"
+    ],
+    "commonSettings": {
+      "rightHanded": "Settings > Player > Right-handed",
+      "leftHanded": "Settings > Player > Left-handed",
+      "difficulty": "Settings > Difficulty > Amateur/Pro",
+      "units": "Settings > Units > Yards/Meters"
+    }
+  }
+}

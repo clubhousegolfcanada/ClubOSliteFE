@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>ClubOS Lite</title>
+    
+    <!-- External Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/form.css">
+    <link rel="stylesheet" href="styles/cards.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    
+    <!-- Early theme detection to prevent flash -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('clubos-theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (metaTheme) {
+                metaTheme.content = savedTheme === 'dark' ? '#0a0a0a' : '#ffffff';
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Component -->
+        <header class="header">
+            <h1 class="logo">ClubOS Lite</h1>
+            <div class="header-actions">
+                <button id="demoBtn" class="btn-demo" title="See a live example of TrackMan troubleshooting">
+                    Demo
+                </button>
+                <button class="theme-toggle" id="themeToggle" data-bind="theme">DARK</button>
+            </div>
+        </header>
+
+        <!-- Main Form Card -->
+        <div class="card">
+            <form id="taskForm" data-bind="form">
+                <!-- Task Description -->
+                <div class="form-group">
+                    <label class="form-label" for="taskInput">Task Description</label>
+                    <textarea 
+                        id="taskInput" 
+                        name="task" 
+                        class="form-textarea" 
+                        placeholder="e.g., What to do when the power is out, customer says TrackMan is frozen, booking cancellation request..."
+                        required
+                        data-bind="task"
+                    ></textarea>
+                </div>
+
+                <!-- Priority Selector -->
+                <div class="form-group">
+                    <label class="form-label">Priority</label>
+                    <div class="priority-selector" data-bind="priority-group">
+                        <input type="radio" id="priority-low" name="priority" value="low" data-bind="priority-low">
+                        <label for="priority-low" class="priority-option">Low</label>
+                        
+                        <input type="radio" id="priority-medium" name="priority" value="medium" checked data-bind="priority-medium">
+                        <label for="priority-medium" class="priority-option">Medium</label>
+                        
+                        <input type="radio" id="priority-high" name="priority" value="high" data-bind="priority-high">
+                        <label for="priority-high" class="priority-option">High</label>
+                    </div>
+                </div>
+
+                <!-- Location Input -->
+                <div class="form-group">
+                    <label class="form-label" for="locationInput">Location/Bay (optional)</label>
+                    <input 
+                        id="locationInput" 
+                        name="location" 
+                        type="text" 
+                        class="form-input" 
+                        placeholder="e.g., Bedford, Dartmouth, Halifax, Bay 3"
+                        data-bind="location"
+                    >
+                    <div class="form-helper">
+                        Add location or bay context if relevant to your task
+                    </div>
+                </div>
+
+                <!-- LLM Route Selector -->
+                <div class="form-group" id="llmRouteGroup" data-bind="route-group">
+                    <label class="form-label" id="llmRouteLabel">Force LLM Route (optional)</label>
+                    <div class="route-selector">
+                        <input type="radio" id="route-auto" name="llm_route" value="auto" checked data-bind="route-auto">
+                        <label for="route-auto" class="route-option">Auto</label>
+                        
+                        <input type="radio" id="route-emergency" name="llm_route" value="EmergencyLLM" data-bind="route-emergency">
+                        <label for="route-emergency" class="route-option">Emergency</label>
+                        
+                        <input type="radio" id="route-booking" name="llm_route" value="BookingLLM" data-bind="route-booking">
+                        <label for="route-booking" class="route-option">Booking</label>
+                        
+                        <input type="radio" id="route-trackman" name="llm_route" value="TrackManLLM" data-bind="route-trackman">
+                        <label for="route-trackman" class="route-option">TrackMan</label>
+                        
+                        <input type="radio" id="route-response-tone" name="llm_route" value="ResponseToneLLM" data-bind="route-response-tone">
+                        <label for="route-response-tone" class="route-option">Response Tone</label>
+                        
+                        <input type="radio" id="route-general" name="llm_route" value="generainfoLLM" data-bind="route-general">
+                        <label for="route-general" class="route-option">General</label>
+                    </div>
+                    <div class="form-helper">
+                        <span class="text-secondary">Each route has specialized access to clubhouse intel & resources</span> 
+                        (emergency protocols, booking systems, equipment guides, service scripts).<br>
+                        <span class="text-accent">Select "Auto" for smart routing or manually choose for specific expertise.</span>
+                    </div>
+                </div>
+
+                <!-- Toggle Options -->
+                <div class="toggle-group">
+                    <div class="toggle-item">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="useLLM" name="use_llm" checked data-bind="use-llm">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <label for="useLLM" class="toggle-label">Smart Assist (LLM)</label>
+                        <span id="slackIndicator" class="slack-indicator" data-bind="slack-indicator">→ Slack</span>
+                    </div>
+                </div>
+                <div id="llmToggleHelper" class="llm-toggle-helper" data-bind="llm-toggle-helper">
+                    When disabled, your task will be sent to Slack as a general question
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary" id="submitBtn" data-bind="submit">
+                        Process Request
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="resetBtn" title="Clear form and start a new query (Esc)" data-bind="reset">
+                        Reset
+                    </button>
+                </div>
+
+                <!-- Error Message -->
+                <div id="errorMessage" class="error-message" data-bind="error"></div>
+
+                <!-- Recent Tasks History -->
+                <div class="history-section" id="historySection" data-bind="history-section">
+                    <label class="form-label">Recent Tasks</label>
+                    <div id="recentTasks" data-bind="recent-tasks"></div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Response Area -->
+        <div class="card response-area" id="responseArea" data-bind="response-area">
+            <div class="response-header">
+                <div class="status-badge" id="statusBadge" data-bind="status-badge">
+                    <span id="statusDot" class="status-dot status-success" data-bind="status-dot"></span>
+                    <span id="statusText" data-bind="status-text">Completed</span>
+                </div>
+                <div class="response-actions">
+                    <div class="confidence-meter" id="confidenceMeter" data-bind="confidence-meter">
+                        Confidence: <strong id="confidenceValue" data-bind="confidence-value">0%</strong>
+                    </div>
+                    <button class="copy-btn" id="copyResponse" title="Copy response to clipboard" data-bind="copy-response">
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <div class="response-content" id="responseContent" data-bind="response-content">
+                <!-- Response will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Keyboard Shortcuts Hint -->
+        <div class="shortcuts-hint">
+            <strong>Keyboard Shortcuts:</strong> 
+            <kbd>Ctrl</kbd>+<kbd>Enter</kbd> Submit • 
+            <kbd>Esc</kbd> Reset • 
+            <kbd>Ctrl</kbd>+<kbd>D</kbd> Demo • 
+            <kbd>Alt</kbd>+<kbd>1-5</kbd> Route Selection
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/clubos-complete.js"></script>
+</body>
+</html>

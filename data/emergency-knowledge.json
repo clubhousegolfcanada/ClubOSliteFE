@@ -1,0 +1,71 @@
+{
+  "route": "EmergencyLLM",
+  "description": "Emergency response protocols and procedures",
+  "knowledgeBase": {
+    "powerOutage": {
+      "steps": [
+        "Immediately check emergency lighting systems",
+        "Announce to all customers: 'We're experiencing a temporary power outage. Emergency lighting will guide you safely.'",
+        "Staff Position 1: Main entrance - prevent new entries",
+        "Staff Position 2: Pro shop - secure cash register and inventory",
+        "Staff Position 3: Each simulator bay - assist customers",
+        "Contact utility company: 1-800-428-6230",
+        "If outage exceeds 30 minutes, offer full refunds or rain checks",
+        "Document all affected bookings for compensation"
+      ],
+      "contacts": {
+        "utility": "1-800-428-6230",
+        "emergency": "911",
+        "facilities": "902-555-0123"
+      }
+    },
+    "medicalEmergency": {
+      "steps": [
+        "Call 911 immediately",
+        "Do not move the person unless in immediate danger",
+        "Assign staff member to meet EMS at entrance",
+        "Clear area around the person",
+        "If trained, provide first aid/CPR",
+        "Document incident in detail",
+        "Contact management immediately"
+      ],
+      "firstAidLocations": [
+        "Behind pro shop counter",
+        "Kitchen area",
+        "Maintenance room"
+      ]
+    },
+    "fireAlarm": {
+      "steps": [
+        "Evacuate immediately via nearest exit",
+        "Staff guides customers to parking lot assembly point",
+        "Account for all staff and customers",
+        "Call 911 if actual fire",
+        "Do not re-enter until all-clear from fire department",
+        "If false alarm, document and reset system"
+      ],
+      "assemblyPoint": "Far end of main parking lot near Bedford Highway"
+    },
+    "severeWeather": {
+      "tornado": [
+        "Move everyone to interior hallways",
+        "Away from windows and simulator bays",
+        "Crouch low, cover heads",
+        "Remain until all-clear"
+      ],
+      "lightning": [
+        "Suspend all activities immediately",
+        "Move everyone indoors",
+        "Wait 30 minutes after last thunder/lightning",
+        "Monitor weather radar"
+      ]
+    }
+  },
+  "priorities": {
+    "1": "Life safety - injuries, medical emergencies",
+    "2": "Facility safety - fire, structural damage",
+    "3": "Power/utility failures",
+    "4": "Weather-related closures",
+    "5": "Equipment emergencies affecting multiple bays"
+  }
+}

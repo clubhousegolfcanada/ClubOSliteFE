@@ -1,0 +1,141 @@
+{
+  "route": "GeneralInfoLLM",
+  "description": "General facility information and standard operations",
+  "knowledgeBase": {
+    "facilities": {
+      "halifax": {
+        "address": "123 Golf Drive, Halifax, NS B3H 4R2",
+        "phone": "902-555-0100",
+        "hours": {
+          "monday-thursday": "10:00 AM - 12:00 AM",
+          "friday": "10:00 AM - 1:00 AM",
+          "saturday": "9:00 AM - 1:00 AM",
+          "sunday": "9:00 AM - 11:00 PM"
+        },
+        "bays": 8,
+        "features": ["Full bar", "Kitchen", "Private event space", "Pro shop"],
+        "parking": "Free on-site, 50 spots"
+      },
+      "dartmouth": {
+        "address": "456 Driving Lane, Dartmouth, NS B2Y 3Z6",
+        "phone": "902-555-0200",
+        "hours": {
+          "monday-thursday": "11:00 AM - 11:00 PM",
+          "friday": "11:00 AM - 12:00 AM",
+          "saturday": "10:00 AM - 12:00 AM",
+          "sunday": "10:00 AM - 10:00 PM"
+        },
+        "bays": 6,
+        "features": ["Bar service", "Snack menu", "Pro shop"],
+        "parking": "Free on-site, 35 spots"
+      },
+      "bedford": {
+        "address": "789 Tee Time Blvd, Bedford, NS B4A 1C3",
+        "phone": "902-555-0300",
+        "hours": {
+          "daily": "10:00 AM - 11:00 PM"
+        },
+        "bays": 10,
+        "features": ["Full restaurant", "Two private event rooms", "Pro shop", "Lessons"],
+        "parking": "Free on-site, 75 spots"
+      }
+    },
+    "services": {
+      "food": {
+        "fullMenu": ["Halifax", "Bedford"],
+        "snackMenu": ["Dartmouth"],
+        "bar": "All locations",
+        "cateringAvailable": true,
+        "outsideFoodPolicy": "Not permitted except for dietary restrictions"
+      },
+      "lessons": {
+        "available": ["Bedford", "Halifax"],
+        "types": ["Individual", "Group (up to 4)", "Junior programs"],
+        "booking": "24 hours advance required",
+        "instructors": 5
+      },
+      "events": {
+        "corporate": {
+          "minSize": 10,
+          "maxSize": 100,
+          "includes": "Bay rentals, catering options, AV support"
+        },
+        "birthday": {
+          "packages": ["Basic (2 hours)", "Premium (3 hours + food)", "VIP (private area)"],
+          "ageGroups": ["Kids (6-12)", "Teens (13-17)", "Adults"]
+        },
+        "tournaments": {
+          "frequency": "Monthly",
+          "format": ["Closest to pin", "Long drive", "Target challenge"],
+          "prizes": true
+        }
+      }
+    },
+    "equipment": {
+      "provided": {
+        "clubs": "Callaway and TaylorMade sets",
+        "balls": "Unlimited premium balls",
+        "tees": "Auto-teeing system",
+        "accessories": "Gloves for purchase"
+      },
+      "bring": {
+        "allowed": ["Own clubs", "Own gloves", "Own shoes"],
+        "notAllowed": ["Own balls", "Outside food/drink", "Professional cameras without permission"]
+      },
+      "rental": {
+        "leftHanded": "Available all locations",
+        "junior": "Available all locations",
+        "shoes": "Not required (indoor facility)"
+      }
+    },
+    "policies": {
+      "age": {
+        "minimum": "6 years with adult",
+        "unaccompanied": "16 years",
+        "alcohol": "19+ with valid ID"
+      },
+      "dress": {
+        "code": "Smart casual",
+        "required": "Closed-toe shoes",
+        "notAllowed": "Swimwear, offensive clothing"
+      },
+      "conduct": {
+        "expected": "Respectful behavior, appropriate language",
+        "prohibited": "Intoxication, damage to equipment, disturbing others",
+        "consequences": "Warning, then removal without refund"
+      }
+    },
+    "membership": {
+      "levels": {
+        "bronze": {
+          "price": "$99/month",
+          "benefits": ["10% off bay time", "Priority booking 3 days out"]
+        },
+        "silver": {
+          "price": "$199/month",
+          "benefits": ["20% off bay time", "Priority booking 7 days out", "10% off food"]
+        },
+        "gold": {
+          "price": "$399/month",
+          "benefits": ["30% off bay time", "Priority booking 14 days out", "20% off food", "Free guest passes (4/month)"]
+        }
+      },
+      "corporate": "Custom packages available"
+    },
+    "commonQuestions": {
+      "whatIsTrackMan": "TrackMan is advanced golf technology that tracks your ball flight and provides instant feedback on distance, accuracy, and technique.",
+      "doINeedExperience": "No! TrackMan is perfect for all skill levels, from beginners to pros. We have games and modes for everyone.",
+      "howManyPeople": "Up to 6 people can play in one bay comfortably.",
+      "whatGames": "Over 30 games including virtual courses, target practice, closest to pin, and fun party games.",
+      "canIBringKids": "Yes! Kids 6 and older are welcome with adult supervision. We have junior clubs available.",
+      "isItWeatherDependent": "No, we're indoors and climate-controlled, so you can play year-round regardless of weather."
+    }
+  },
+  "quickFacts": {
+    "founded": "2019",
+    "totalBays": 24,
+    "employeeCount": "Approximately 75",
+    "busiestTimes": "Friday evenings, Saturday all day",
+    "quietestTimes": "Monday-Wednesday afternoons"
+  }
+}

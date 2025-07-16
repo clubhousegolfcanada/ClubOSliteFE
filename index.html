@@ -11,8 +11,10 @@
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/theme.css">
     <link rel="stylesheet" href="styles/form.css">
     <link rel="stylesheet" href="styles/cards.css">
+    <link rel="stylesheet" href="styles/layout.css">
     <link rel="stylesheet" href="styles/responsive.css">
     
     <!-- Early theme detection to prevent flash -->
@@ -25,6 +27,14 @@
                 metaTheme.content = savedTheme === 'dark' ? '#0a0a0a' : '#ffffff';
             }
         })();
+    </script>
+    
+    <!-- Configuration -->
+    <script>
+        // Global configuration that can be overridden
+        window.CLUBOS_API_ENDPOINT = window.CLUBOS_API_ENDPOINT || 'http://localhost:8000/process';
+        window.CLUBOS_SLACK_ENDPOINT = window.CLUBOS_SLACK_ENDPOINT || 'http://localhost:8000/slack';
+        window.CLUBOS_MOCK_MODE = window.CLUBOS_MOCK_MODE !== undefined ? window.CLUBOS_MOCK_MODE : true;
     </script>
 </head>
 <body>
@@ -56,34 +66,19 @@
                     ></textarea>
                 </div>
 
-                <!-- Priority Selector -->
-                <div class="form-group">
-                    <label class="form-label">Priority</label>
-                    <div class="priority-selector" data-bind="priority-group">
-                        <input type="radio" id="priority-low" name="priority" value="low" data-bind="priority-low">
-                        <label for="priority-low" class="priority-option">Low</label>
-                        
-                        <input type="radio" id="priority-medium" name="priority" value="medium" checked data-bind="priority-medium">
-                        <label for="priority-medium" class="priority-option">Medium</label>
-                        
-                        <input type="radio" id="priority-high" name="priority" value="high" data-bind="priority-high">
-                        <label for="priority-high" class="priority-option">High</label>
-                    </div>
-                </div>
-
                 <!-- Location Input -->
                 <div class="form-group">
-                    <label class="form-label" for="locationInput">Location/Bay (optional)</label>
+                    <label class="form-label" for="locationInput">Location (optional)</label>
                     <input 
                         id="locationInput" 
                         name="location" 
                         type="text" 
                         class="form-input" 
-                        placeholder="e.g., Bedford, Dartmouth, Halifax, Bay 3"
+                        placeholder="e.g., Bedford, Dartmouth, Halifax"
                         data-bind="location"
                     >
                     <div class="form-helper">
-                        Add location or bay context if relevant to your task
+                        Add location context if relevant to your task
                     </div>
                 </div>
 
@@ -143,12 +138,6 @@
 
                 <!-- Error Message -->
                 <div id="errorMessage" class="error-message" data-bind="error"></div>
-
-                <!-- Recent Tasks History -->
-                <div class="history-section" id="historySection" data-bind="history-section">
-                    <label class="form-label">Recent Tasks</label>
-                    <div id="recentTasks" data-bind="recent-tasks"></div>
-                </div>
             </form>
         </div>
 
@@ -163,9 +152,6 @@
                     <div class="confidence-meter" id="confidenceMeter" data-bind="confidence-meter">
                         Confidence: <strong id="confidenceValue" data-bind="confidence-value">0%</strong>
                     </div>
-                    <button class="copy-btn" id="copyResponse" title="Copy response to clipboard" data-bind="copy-response">
-                        Copy
-                    </button>
                 </div>
             </div>
             <div class="response-content" id="responseContent" data-bind="response-content">
@@ -173,17 +159,339 @@
             </div>
         </div>
 
-        <!-- Keyboard Shortcuts Hint -->
+        <!-- Keyboard Shortcuts Hint (Desktop only) -->
         <div class="shortcuts-hint">
             <strong>Keyboard Shortcuts:</strong> 
             <kbd>Ctrl</kbd>+<kbd>Enter</kbd> Submit • 
             <kbd>Esc</kbd> Reset • 
-            <kbd>Ctrl</kbd>+<kbd>D</kbd> Demo • 
-            <kbd>Alt</kbd>+<kbd>1-5</kbd> Route Selection
+            <kbd>Ctrl</kbd>+<kbd>D</kbd> Demo
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Load UI Components -->
+    <script src="components/UICcomponents.js"></script>
+    
+    <!-- Load Core Modules -->
+    <script src="scripts/config.js"></script>
+    <script src="scripts/state.js"></script>
+    <script src="scripts/telemetry.js"></script>
+    
+    <!-- Load Feature Handlers -->
+    <script src="features/FormHandlers.js"></script>
+    <script src="scripts/demo.js"></script>
+    
+    <!-- Load LLM System -->
+    <script src="llm/utils.js"></script>
+    <script src="llm/templateLoader.js"></script>
+    <script src="llm/responseParser.js"></script>
+    <script src="llm/llmDispatcher.js"></script>
+    
+    <!-- Load Main Controllers -->
+    <script src="scripts/AppController.js"></script>
+    
+    <!-- Main App Entry Point -->
     <script type="module" src="scripts/app.js"></script>
+    
+    <!-- Initialize App -->
+    <script>
+        // Additional inline initialization for critical features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize form handlers
+            const form = document.getElementById('taskForm');
+            const taskInput = document.getElementById('taskInput');
+            const locationInput = document.getElementById('locationInput');
+            const useLLM = document.getElementById('useLLM');
+            const submitBtn = document.getElementById('submitBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const responseArea = document.getElementById('responseArea');
+            const errorMessage = document.getElementById('errorMessage');
+            const slackIndicator = document.getElementById('slackIndicator');
+            const llmToggleHelper = document.getElementById('llmToggleHelper');
+            
+            // Handle LLM toggle
+            useLLM.addEventListener('change', function() {
+                const routeOptions = document.querySelectorAll('.route-option');
+                const routeInputs = document.querySelectorAll('input[name="llm_route"]');
+                const llmRouteLabel = document.querySelector('#llmRouteGroup .form-label');
+                
+                if (!this.checked) {
+                    // Show Slack indicators
+                    llmToggleHelper.style.display = 'block';
+                    slackIndicator.style.display = 'inline';
+                    
+                    // Disable route selector
+                    routeOptions.forEach(option => {
+                        option.style.opacity = '0.5';
+                        option.style.cursor = 'not-allowed';
+                    });
+                    routeInputs.forEach(input => {
+                        input.disabled = true;
+                    });
+                    
+                    // Update route label
+                    if (llmRouteLabel) {
+                        llmRouteLabel.style.opacity = '0.5';
+                        llmRouteLabel.innerHTML = 'Force LLM Route (disabled - sending to Slack)';
+                    }
+                    
+                    // Update submit button
+                    submitBtn.innerHTML = 'Send to Slack';
+                    submitBtn.classList.add('slack-mode');
+                } else {
+                    // Hide Slack indicators
+                    llmToggleHelper.style.display = 'none';
+                    slackIndicator.style.display = 'none';
+                    
+                    // Enable route selector
+                    routeOptions.forEach(option => {
+                        option.style.opacity = '1';
+                        option.style.cursor = 'pointer';
+                    });
+                    routeInputs.forEach(input => {
+                        input.disabled = false;
+                    });
+                    
+                    // Reset route label
+                    if (llmRouteLabel) {
+                        llmRouteLabel.style.opacity = '1';
+                        llmRouteLabel.innerHTML = 'Force LLM Route (optional)';
+                    }
+                    
+                    // Reset submit button
+                    submitBtn.innerHTML = 'Process Request';
+                    submitBtn.classList.remove('slack-mode');
+                }
+            });
+            
+            // Form submission handler
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Validate
+                if (!taskInput.value.trim()) {
+                    showError('Please enter a task description');
+                    return;
+                }
+                
+                // Hide any existing errors
+                errorMessage.style.display = 'none';
+                responseArea.style.display = 'none';
+                
+                // Prepare payload
+                const selectedRoute = document.querySelector('input[name="llm_route"]:checked').value;
+                const payload = {
+                    task: taskInput.value.trim(),
+                    priority: "medium",
+                    location: locationInput.value.trim() || null,
+                    use_llm: useLLM.checked,
+                    llm_route: selectedRoute
+                };
+                
+                // Show loading state
+                submitBtn.disabled = true;
+                resetBtn.disabled = true;
+                const loadingText = useLLM.checked ? 'Processing...' : 'Sending to Slack...';
+                submitBtn.innerHTML = `<span class="spinner"></span> ${loadingText}`;
+                
+                try {
+                    // Use the configured endpoint
+                    const endpoint = useLLM.checked 
+                        ? window.CLUBOS_API_ENDPOINT 
+                        : window.CLUBOS_SLACK_ENDPOINT;
+                    
+                    // Handle mock mode
+                    if (window.CLUBOS_MOCK_MODE) {
+                        // Simulate API delay
+                        await new Promise(resolve => setTimeout(resolve, 1500));
+                        
+                        // Generate mock response
+                        const mockResponse = {
+                            status: 'completed',
+                            confidence: 0.92,
+                            recommendation: useLLM.checked ? [
+                                "Based on your request, here's what I recommend:",
+                                "First, verify the current status of the system",
+                                "Next, follow the standard troubleshooting procedure",
+                                "If the issue persists, escalate to technical support",
+                                "Document the issue in the incident log"
+                            ] : "Your message has been sent to the Slack channel.",
+                            llm_route_used: selectedRoute !== 'auto' ? selectedRoute : 'Auto-detected',
+                            processing_time: "0.8s"
+                        };
+                        
+                        displayResponse(mockResponse);
+                    } else {
+                        // Real API call
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(payload)
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        const result = await response.json();
+                        displayResponse(result);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    showError('Failed to process request. Please check if the server is running.');
+                } finally {
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    resetBtn.disabled = false;
+                    submitBtn.innerHTML = useLLM.checked ? 'Process Request' : 'Send to Slack';
+                }
+            });
+            
+            // Reset button handler
+            resetBtn.addEventListener('click', function() {
+                // Clear form
+                taskInput.value = '';
+                locationInput.value = '';
+                document.getElementById('route-auto').checked = true;
+                
+                // Reset LLM toggle if needed
+                if (!useLLM.checked) {
+                    useLLM.checked = true;
+                    useLLM.dispatchEvent(new Event('change'));
+                }
+                
+                // Hide response area
+                responseArea.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                // Focus back on task input
+                taskInput.focus();
+            });
+            
+            // Helper functions
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+            
+            function displayResponse(result) {
+                responseArea.style.display = 'block';
+                
+                // Update status
+                const statusText = document.getElementById('statusText');
+                const statusDot = document.getElementById('statusDot');
+                const status = result.status || 'completed';
+                
+                statusText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+                statusDot.className = 'status-dot';
+                
+                if (status === 'completed' || status === 'success') {
+                    statusDot.classList.add('status-success');
+                } else if (status === 'error' || status === 'failed') {
+                    statusDot.classList.add('status-error');
+                } else {
+                    statusDot.classList.add('status-processing');
+                }
+                
+                // Update confidence
+                const confidenceMeter = document.getElementById('confidenceMeter');
+                const confidenceValue = document.getElementById('confidenceValue');
+                
+                if (!useLLM.checked || result.confidence === undefined) {
+                    confidenceMeter.style.display = 'none';
+                } else {
+                    confidenceMeter.style.display = 'flex';
+                    confidenceValue.textContent = Math.round((result.confidence || 0) * 100) + '%';
+                }
+                
+                // Update response content
+                const responseContent = document.getElementById('responseContent');
+                if (!useLLM.checked) {
+                    responseContent.innerHTML = `
+                        <strong>Sent to Slack</strong><br>
+                        Your question has been posted to the general Slack channel.
+                        ${result.slack_message_id ? `<br><small>Message ID: ${result.slack_message_id}</small>` : ''}
+                    `;
+                } else if (result.recommendation) {
+                    let content = '<strong>Recommendation:</strong>';
+                    if (Array.isArray(result.recommendation)) {
+                        content += '<ul>' + result.recommendation.map(step => `<li>${step}</li>`).join('') + '</ul>';
+                    } else {
+                        content += `<br>${result.recommendation}`;
+                    }
+                    
+                    // Add metadata if available
+                    if (result.llm_route_used || result.processing_time) {
+                        content += '<div class="response-metadata">';
+                        if (result.llm_route_used) {
+                            content += `<div>Route Used: <span class="text-secondary">${result.llm_route_used}</span></div>`;
+                        }
+                        if (result.processing_time) {
+                            content += `<div>Processing Time: <span class="text-secondary">${result.processing_time}</span></div>`;
+                        }
+                        content += '</div>';
+                    }
+                    
+                    responseContent.innerHTML = content;
+                } else {
+                    responseContent.innerHTML = '<em>No response data available</em>';
+                }
+                
+                // Smooth scroll to response
+                responseArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            
+            // Auto-fix toggle switches visual state
+            document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    if (this.checked) {
+                        this.parentElement.style.background = 'var(--accent)';
+                    } else {
+                        this.parentElement.style.background = 'var(--bg-tertiary)';
+                    }
+                });
+                
+                // Initialize state
+                if (toggle.checked) {
+                    toggle.parentElement.style.background = 'var(--accent)';
+                }
+            });
+            
+            // Initialize demo button if the demo module is loaded
+            if (window.ClubOS && window.ClubOS.Demo) {
+                document.getElementById('demoBtn').addEventListener('click', function() {
+                    window.ClubOS.Demo.run();
+                });
+            }
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Escape key to reset
+                if (e.key === 'Escape') {
+                    resetBtn.click();
+                }
+                
+                // Ctrl/Cmd + Enter to submit
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    if (!submitBtn.disabled) {
+                        form.dispatchEvent(new Event('submit'));
+                    }
+                }
+                
+                // Ctrl/Cmd + D for demo
+                if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+                    e.preventDefault();
+                    const demoBtn = document.getElementById('demoBtn');
+                    if (demoBtn) demoBtn.click();
+                }
+            });
+            
+            // Focus task input on load
+            taskInput.focus();
+        });
+    </script>
 </body>
 </html>

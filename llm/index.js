@@ -19,3 +19,22 @@ ${JSON.stringify(payload, null, 2)}
 
   return response.data
 }
+// index.js (Core LLM Send logic)
+export async function sendToLLM(prompt) {
+  try {
+    const response = await fetch('YOUR_LLM_ENDPOINT', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_LLM_API_KEY'
+      },
+      body: JSON.stringify({ prompt })
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('LLM call failed:', error);
+    throw error;
+  }
+}

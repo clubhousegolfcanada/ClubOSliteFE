@@ -17,10 +17,10 @@ ClubOSLiteFrontend/
 │   │   ├── emergency-api.js
 │   │   ├── emergency.css
 │   │   └── payload.mock.json
-│   ├── trackman/
-│   │   ├── TrackmanForm.js
-│   │   ├── trackman-api.js
-│   │   ├── trackman.css
+│   ├── tech/
+│   │   ├── techForm.js
+│   │   ├── tech-api.js
+│   │   ├── tech.css
 │   │   └── payload.mock.json
 │   ├── clubhouseinfo/
 │   │   ├── InfoForm.js
