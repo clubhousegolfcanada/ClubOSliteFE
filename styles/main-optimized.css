@@ -1,13 +1,5 @@
-/* ClubOS Lite - Consolidated Main Styles */
-
-/* Import all component styles in order */
-@import url('theme.css');
-@import url('layout.css');
-@import url('form.css');
-@import url('cards.css');
-@import url('responsive.css');
-
-/* Additional optimizations and overrides */
+/* ClubOS Lite - Additional Optimizations and Overrides */
+/* Note: Individual CSS files are now loaded directly via link tags in index.html */
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {

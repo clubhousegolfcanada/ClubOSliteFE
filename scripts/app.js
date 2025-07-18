@@ -53,7 +53,7 @@ window.ClubOS.ThemeManager = {
     },
     
     loadSavedTheme() {
-        const saved = localStorage.getItem(window.ClubOS.CONFIG.THEME_KEY) || 'dark';
+        const saved = window.ClubOS.Storage.get(window.ClubOS.CONFIG.THEME_KEY, 'dark');
         this.setTheme(saved);
     },
     
@@ -65,7 +65,7 @@ window.ClubOS.ThemeManager = {
     
     setTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem(window.ClubOS.CONFIG.THEME_KEY, theme);
+        window.ClubOS.Storage.set(window.ClubOS.CONFIG.THEME_KEY, theme);
         
         // Update toggle button
         const toggle = document.getElementById('themeToggle');

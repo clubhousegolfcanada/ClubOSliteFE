@@ -82,10 +82,7 @@ class AppController {
             window.ClubOS.ResponseManager.init();
         }
         
-        // Initialize theme manager
-        if (window.ClubOS.ThemeManager) {
-            window.ClubOS.ThemeManager.init();
-        }
+        // Note: ThemeManager is initialized in app.js to prevent duplicate initialization
     }
     
     async handleSubmit(e) {
@@ -459,13 +456,15 @@ class AppController {
     
     // Recent Tasks Management
     loadRecentTasks() {
-        try {
-            const saved = localStorage.getItem('clubos-recent-tasks');
-            this.state.recentTasks = saved ? JSON.parse(saved) : [];
-            this.renderRecentTasks();
-        } catch (error) {
-            console.error('Failed to load recent tasks:', error);
-            this.state.recentTasks = [];
+        // Use safe storage wrapper
+        const saved = window.ClubOS.Storage.get('clubos-recent-tasks', []);
+        this.state.recentTasks = saved;
+        this.renderRecentTasks();
+        
+        // Show recent tasks section if feature is enabled and tasks exist
+        if (window.ClubOS.CONFIG?.FEATURES?.RECENT_TASKS && this.state.recentTasks.length > 0) {
+            const section = document.getElementById('recentTasksSection');
+            if (section) section.style.display = 'block';
         }
     }
     
@@ -483,11 +482,15 @@ class AppController {
         this.state.recentTasks.unshift(task);
         this.state.recentTasks = this.state.recentTasks.slice(0, 5);
         
-        // Save to localStorage
-        try {
-            localStorage.setItem('clubos-recent-tasks', JSON.stringify(this.state.recentTasks));
-        } catch (error) {
-            console.error('Failed to save recent tasks:', error);
+        // Save using safe storage wrapper
+        window.ClubOS.Storage.set('clubos-recent-tasks', this.state.recentTasks);
+        
+        // Show recent tasks section if not already visible
+        if (window.ClubOS.CONFIG?.FEATURES?.RECENT_TASKS) {
+            const section = document.getElementById('recentTasksSection');
+            if (section && section.style.display === 'none') {
+                section.style.display = 'block';
+            }
         }
         
         this.renderRecentTasks();

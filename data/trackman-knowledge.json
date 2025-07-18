@@ -100,3 +100,46 @@
     }
   }
 }
+
+[
+  {
+    "summary": "The customer asks what is the wifi password",
+    "suggested_action": "Give the customer the Wi-Fi password immediately. Network: ClubGolf (capital C, capital G).",
+    "tags": ["tech"]
+  },
+  {
+    "summary": "The system seems to be frozen, can't get it to read shots or reset",
+    "suggested_action": "Connect via Splashtop to the specific box/bay. Hit the Windows key, close the TrackMan icon, and relaunch the software. Tell the customer they can resume from the My Activities screen.",
+    "tags": ["tech"]
+  },
+  {
+    "summary": "The camera isn't working for overhead replay (Trackman says no camera detected)",
+    "suggested_action": "Same as above — connect via Splashtop, hit Windows key, close and relaunch TrackMan. Tell the customer they can resume from My Activities.",
+    "tags": ["tech"]
+  },
+  {
+    "summary": "The customer asks if they can connect to the Wi-Fi at the Dartmouth location",
+    "suggested_action": "Give the customer the Wi-Fi password immediately. Network: ClubGolf (capital C, capital G).",
+    "tags": ["tech"]
+  },
+  {
+    "summary": "The monitor shows a Windows startup screen; the customer asks if it will auto start",
+    "suggested_action": "Connect to the computer via Splashtop and investigate. Could be due to a Windows update.",
+    "tags": ["tech"]
+  },
+  {
+    "summary": "The ball is not registering on the simulator",
+    "suggested_action": "Confirm there’s only one ball near the hitting mat. Confirm the game is not frozen. Restart TrackMan Game if needed.",
+    "tags": ["tech"]
+  },
+  {
+    "summary": "The customer’s system seems to have a Trackman software glitch (only part of the data is showing)",
+    "suggested_action": "Acknowledge the glitch and perform a full software restart via Splashtop. Ensure the data displays correctly and offer extra time for the inconvenience.",
+    "tags": ["tech"]
+  },
+  {
+    "summary": "The customer says the system is showing an update or doing updates all summer, causing issues",
+    "suggested_action": "Acknowledge the update issue and reassure the customer. Reboot via Splashtop if needed and provide a free hour code (e.g., “updatemab”) for the inconvenience.",
+    "tags": ["tech"]
+  }
+]

@@ -1,0 +1,423 @@
+{
+  "tech": {
+    "wifiPassword": {
+      "symptoms": [
+        "Customer asks for Wi-Fi password",
+        "Cannot connect to Wi-Fi network"
+      ],
+      "solutions": [
+        "Provide network name and password: ClubGolf (capital C, capital G)"
+      ],
+      "timeEstimate": "Under 1 minute",
+      "customerScript": "The Wi-Fi network is ClubGolf \u2014 capital C, capital G. Let me know if it doesn\u2019t connect.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "frozenSystem": {
+      "symptoms": [
+        "Screen frozen",
+        "Unresponsive to clicks",
+        "Game won\u2019t launch or switch"
+      ],
+      "solutions": [
+        "Connect to bay PC via Splashtop",
+        "Press Windows key to reveal taskbar",
+        "Right-click TrackMan icon > Close",
+        "Launch TrackMan from desktop",
+        "Wait 30\u201345 seconds for system to initialize"
+      ],
+      "timeEstimate": "5\u201310 minutes",
+      "customerScript": "I\u2019ll reset the system for you. Give it a minute, then you can restart from the My Activities screen.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "cameraNotDetected": {
+      "symptoms": [
+        "No overhead replay",
+        "TrackMan error: Camera not detected"
+      ],
+      "solutions": [
+        "Connect to PC via Splashtop",
+        "Close and relaunch TrackMan using standard restart steps (see frozenSystem)",
+        "Confirm camera initializes on reboot"
+      ],
+      "timeEstimate": "5\u201310 minutes",
+      "customerScript": "Looks like the camera glitched \u2014 I\u2019m doing a quick restart. It\u2019ll be back in about 2 minutes.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "windowsStartupScreen": {
+      "symptoms": [
+        "Customer sees Windows login or startup screen",
+        "TrackMan doesn\u2019t auto-launch"
+      ],
+      "solutions": [
+        "Connect via Splashtop",
+        "Investigate cause (often Windows Update)",
+        "Manually log in if needed",
+        "Launch TrackMan from desktop"
+      ],
+      "timeEstimate": "5 minutes",
+      "customerScript": "The bay just needs a quick manual reset \u2014 I\u2019m launching the software now.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "ballNotRegistering": {
+      "symptoms": [
+        "Shots not detected",
+        "Ball isn\u2019t being picked up by radar"
+      ],
+      "solutions": [
+        "Ensure only one ball is near hitting mat",
+        "Check that TrackMan Game is not frozen",
+        "Restart TrackMan Game software if needed",
+        "Confirm radar connection in TrackMan settings"
+      ],
+      "timeEstimate": "5 minutes",
+      "customerScript": "Hang tight \u2014 I\u2019m just making sure the system picks up your shots. Should be ready in a moment.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "partialDataGlitch": {
+      "symptoms": [
+        "Only some ball data showing",
+        "Data screen incomplete or missing numbers"
+      ],
+      "solutions": [
+        "Restart TrackMan software via Splashtop",
+        "Confirm radar is connected and green",
+        "Verify full shot data after reboot"
+      ],
+      "timeEstimate": "5\u201310 minutes",
+      "customerScript": "TrackMan glitched \u2014 doing a reset now. Everything will be back in under 2 minutes.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "systemUpdating": {
+      "symptoms": [
+        "Update message showing",
+        "Bay not launching TrackMan",
+        "Customer stuck at Windows screen"
+      ],
+      "solutions": [
+        "Reboot PC remotely via Splashtop",
+        "Launch TrackMan once update completes",
+        "Offer compensation if delay exceeds 10 minutes"
+      ],
+      "timeEstimate": "5\u201315 minutes",
+      "customerScript": "Windows forced an update \u2014 I\u2019m getting things rebooted now. You\u2019ll be good to go shortly. I\u2019ll send you a free hour for the wait.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "projectorNoSignal": {
+      "symptoms": [
+        "Black screen or \u201cNo Signal\u201d message on projector",
+        "TrackMan shows running normally on PC"
+      ],
+      "solutions": [
+        "Confirm HDMI is securely connected to PC and projector",
+        "Restart projector using remote or power cycle at plug",
+        "Reboot bay PC if signal still doesn\u2019t restore"
+      ],
+      "timeEstimate": "5\u201310 minutes",
+      "customerScript": "Looks like the projector lost signal \u2014 give me a moment to reset things and bring the visuals back.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    }
+  },
+  "booking": {
+    "giftCardPurchase": {
+      "summary": "The customer asks if they're able to purchase a gift certificate online",
+      "suggested_action": "Send them to clubhouse247golf.com/gift-card/purchase \u2014 direct link, no friction.",
+      "tags": [
+        "booking"
+      ]
+    },
+    "rescheduleBooking": {
+      "summary": "The customer has a booking and is wondering if it can be changed",
+      "suggested_action": "Offer to cancel and refund the booking so they can rebook at their convenience.",
+      "tags": [
+        "booking"
+      ]
+    },
+    "cancellationPolicy": {
+      "summary": "The customer asks what is your cancellation policy",
+      "suggested_action": "Let them know we don\u2019t really have one \u2014 we\u2019ll take care of them unless it becomes a pattern.",
+      "tags": [
+        "booking"
+      ]
+    },
+    "cancelDueToConflict": {
+      "summary": "The customer asks if they can cancel their booking due to conflict",
+      "suggested_action": "Cancel it with no issue. Tell them we understand life happens and we\u2019ve got it covered.",
+      "tags": [
+        "booking",
+        "refund"
+      ]
+    },
+    "extendBooking": {
+      "summary": "The customer asks if they can extend or add half an hour to their booking",
+      "suggested_action": "Just comp it. If it\u2019s a pattern or repeat customer doing this often, flag it and send to Slack.",
+      "tags": [
+        "booking"
+      ]
+    },
+    "bookingRefundDefault": {
+      "summary": "Any refund or cancellation reason from the customer",
+      "suggested_action": "Default to: cancel, refund, no issue. Let them rebook when it works for them.",
+      "tags": [
+        "booking",
+        "refund"
+      ]
+    },
+    "missingConfirmation": {
+      "summary": "The customer did not receive their booking confirmation email",
+      "suggested_action": "Ask if they also didn\u2019t receive the text. If neither came through, manually cancel and rebook on their behalf after confirming the purchase.",
+      "tags": [
+        "booking"
+      ]
+    },
+    "lostPricing": {
+      "summary": "The customer lost track of the number they texted earlier and cannot find previously given prices",
+      "suggested_action": "Send them to clubhouse247golf.com/info \u2014 everything is listed there.",
+      "tags": [
+        "booking"
+      ]
+    },
+    "incorrectEmailUsed": {
+      "summary": "Customer booked with the wrong email and didn\u2019t receive confirmation",
+      "suggested_action": "Ask for the name used on booking, verify time slot, and manually resend or rebook using correct email",
+      "tags": [
+        "booking",
+        "support"
+      ]
+    }
+  },
+  "emergency": {
+    "powerOutage": {
+      "symptoms": [
+        "Power off",
+        "No lights/screens",
+        "Customer reports outage or system down"
+      ],
+      "solutions": [
+        "Inform all customers of the outage",
+        "Refund all affected bookings",
+        "Send a free hour code via OpenPhone to affected numbers",
+        "Block off upcoming unavailable time slots",
+        "Notify future customers if outage persists"
+      ],
+      "timeEstimate": "5\u201310 minutes per customer",
+      "customerScript": "We\u2019ve had a power outage at that location \u2014 I\u2019ve refunded your session and sent a free hour code. Really sorry about the disruption.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "lockedOut": {
+      "symptoms": [
+        "Customer at door",
+        "Can\u2019t enter with code",
+        "Door not opening"
+      ],
+      "solutions": [
+        "Ask for customer name and confirm location",
+        "Verify booking is active",
+        "Remotely unlock door immediately",
+        "Investigate cause later (bad code, early arrival, etc.)"
+      ],
+      "timeEstimate": "1\u20132 minutes",
+      "customerScript": "You're all set \u2014 just unlocked the door. Let me know if you need anything once you're inside.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "waterLeak": {
+      "symptoms": [
+        "Water on floor",
+        "Wet ceiling or walls",
+        "Active dripping or flooding"
+      ],
+      "solutions": [
+        "Do not troubleshoot alone",
+        "Immediately escalate in Slack with location and photo (if available)"
+      ],
+      "timeEstimate": "Immediate handoff",
+      "customerScript": "Thanks for flagging that \u2014 I\u2019ve sent this to the team. They\u2019ll handle it right away.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "medicalEmergency": {
+      "symptoms": [
+        "Customer injury",
+        "Someone unconscious",
+        "911-worthy event"
+      ],
+      "solutions": [
+        "Do not attempt diagnosis",
+        "Instruct someone to call 911 if needed",
+        "Escalate immediately to Slack with any details"
+      ],
+      "timeEstimate": "Immediate handoff",
+      "customerScript": "That sounds serious \u2014 I\u2019ve alerted the team. Help is on the way if needed.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "customerBehavior": {
+      "symptoms": [
+        "Aggressive tone",
+        "Yelling",
+        "Harassing other customers",
+        "Uncooperative"
+      ],
+      "solutions": [
+        "Do not engage or escalate alone",
+        "Document exact wording or behavior",
+        "Immediately notify Slack for senior team intervention"
+      ],
+      "timeEstimate": "Immediate handoff",
+      "customerScript": "Thanks for flagging that. I\u2019ve sent this to the team \u2014 they\u2019ll take it from here.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "temperatureIssue": {
+      "symptoms": [
+        "Too cold",
+        "Too hot",
+        "Customer mentions temperature discomfort"
+      ],
+      "solutions": [
+        "Acknowledge concern",
+        "Escalate to Slack so someone local can investigate HVAC or heating settings"
+      ],
+      "timeEstimate": "1\u20133 minutes",
+      "customerScript": "Thanks for letting us know \u2014 I\u2019ll get someone to check on the temp and fix it.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "musicTooLoud": {
+      "symptoms": [
+        "Customer playing music loudly",
+        "Another bay complains about noise",
+        "Music audible outside bay"
+      ],
+      "solutions": [
+        "If unknown: escalate in Slack for investigation",
+        "If member, gift card, or 3P customer: message them politely",
+        "Ask them to turn it down drastically or shut it off entirely"
+      ],
+      "timeEstimate": "1\u20132 minutes",
+      "customerScript": "Hey \u2014 our system noticed loud music in your bay. Mind turning it down a bunch or muting it entirely? Appreciate it.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "glassBreakOrDamage": {
+      "symptoms": [
+        "Bay window, TV screen, or camera lens cracked",
+        "Customer reports damage or accident during session"
+      ],
+      "solutions": [
+        "Thank them for reporting, ask for photo if available",
+        "Escalate immediately for physical damage assessment",
+        "Document booking details and follow-up with repair ops"
+      ],
+      "timeEstimate": "Immediate handoff",
+      "customerScript": "Appreciate you flagging that \u2014 we\u2019ll get this resolved quickly. I\u2019ve sent it to our team and they\u2019ll be on it.",
+      "escalation": "Send to Slack with photo and booking details."
+    }
+  },
+  "general": {
+    "forgotAccessCode": {
+      "symptoms": [
+        "Customer forgot door code",
+        "Deleted email",
+        "Didn't receive text",
+        "Can't enter"
+      ],
+      "solutions": [
+        "Verify identity and location",
+        "Remote unlock the door",
+        "Prioritize entry \u2014 booking cleanup can wait"
+      ],
+      "timeEstimate": "1\u20132 minutes",
+      "customerScript": "You're all set \u2014 just unlocked the door for you. Let us know if you need anything once you're inside.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "locationInquiry": {
+      "symptoms": [
+        "Customer asks about opening a Clubhouse",
+        "Questions about building specs or rent"
+      ],
+      "solutions": [
+        "Refer them to clubhouse247golf.com",
+        "Advise them to email booking@clubhouse247golf.com for more details"
+      ],
+      "timeEstimate": "1 minute",
+      "customerScript": "Best next step is to check clubhouse247golf.com \u2014 or shoot us an email at booking@clubhouse247golf.com. We\u2019ll guide you from there.",
+      "escalation": "Send to Slack if it\u2019s a potential partner or high-priority inbound."
+    },
+    "deliveryOrRepairAccess": {
+      "symptoms": [
+        "Delivery person or repair tech needs building access",
+        "Scheduled service can't enter"
+      ],
+      "solutions": [
+        "Confirm name and company",
+        "Remote unlock for them",
+        "Log visit if possible"
+      ],
+      "timeEstimate": "1\u20133 minutes",
+      "customerScript": "You're all set \u2014 door unlocked. Let us know when you're out.",
+      "escalation": "Send to Slack \u2014 someone will respond momentarily."
+    },
+    "askedIfStaffed": {
+      "symptoms": [
+        "Customer or visitor asks if anyone is on-site",
+        "Wants to know if staff are present"
+      ],
+      "solutions": [
+        "Let them know the facility is automated",
+        "Offer live support remotely if they need anything"
+      ],
+      "timeEstimate": "30 seconds",
+      "customerScript": "It\u2019s a fully automated space, so no one\u2019s on-site \u2014 but we\u2019ve got full remote support if you need anything.",
+      "escalation": "Send to Slack if someone insists on in-person help"
+    },
+    "ladderRequest": {
+      "symptoms": [
+        "Customer or contractor asks if we have a ladder"
+      ],
+      "solutions": [
+        "Confirm that ladders are available at all locations",
+        "Direct them to where it\u2019s stored if needed"
+      ],
+      "timeEstimate": "30 seconds",
+      "customerScript": "Yes \u2014 every location has one. Let us know if you need help finding it.",
+      "escalation": "Send to Slack if access to storage area is blocked"
+    },
+    "lostAndFound": {
+      "symptoms": [
+        "Customer says they left a club, jacket, headcover, etc.",
+        "Lost item inquiry"
+      ],
+      "solutions": [
+        "Direct them to email booking@clubhouse247golf.com with a description",
+        "Check lost & found log or camera footage if needed"
+      ],
+      "timeEstimate": "Varies \u2014 2 to 10 minutes",
+      "customerScript": "Email us at booking@clubhouse247golf.com with what you lost \u2014 we\u2019ll help you get it back.",
+      "escalation": "Send to Slack if it\u2019s a high-value item or multiple customer claims"
+    },
+    "cardDeclinedDuringBooking": {
+      "symptoms": [
+        "Customer says booking didn\u2019t go through",
+        "Mention of error or failed payment"
+      ],
+      "solutions": [
+        "Confirm no booking exists in system",
+        "Suggest trying again or using a different card",
+        "Offer to hold slot temporarily if time-sensitive"
+      ],
+      "timeEstimate": "1\u20132 minutes",
+      "customerScript": "Looks like the card didn\u2019t go through \u2014 no charge on our end. Try again or use another card and let me know if you need help holding the spot.",
+      "escalation": "Send to Slack if repeat pattern or blocked transaction."
+    },
+    "trackmanLoginIssue": {
+      "symptoms": [
+        "Customer says they can't log into TrackMan",
+        "Simulator stuck on login screen",
+        "TrackMan asking for email/password and they don\u2019t know it"
+      ],
+      "solutions": [
+        "Let customer know they can tap 'Guest' to bypass login",
+        "No need to enter an email unless they have a personal TrackMan account",
+        "Do not attempt to log in on their behalf"
+      ],
+      "timeEstimate": "30 seconds",
+      "customerScript": "You can just hit 'Guest' on the login screen \u2014 no account needed. Let me know if anything else pops up.",
+      "escalation": "Send to Slack if login screen glitches or 'Guest' option is missing"
+    }
+  }
+}

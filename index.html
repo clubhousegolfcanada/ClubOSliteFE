@@ -10,10 +10,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Stylesheets -->
+    <!-- Load individual CSS files for better compatibility -->
+    <link rel="stylesheet" href="styles/theme.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/form.css">
+    <link rel="stylesheet" href="styles/cards.css">
+    <link rel="stylesheet" href="styles/responsive.css">
     <link rel="stylesheet" href="styles/main-optimized.css">
     <!-- Preload critical CSS -->
     <link rel="preload" href="styles/theme.css" as="style">
-    <link rel="preload" href="styles/main.css" as="style">
+    <link rel="preload" href="styles/layout.css" as="style">
     
     <!-- Early theme detection to prevent flash -->
     <script>
@@ -32,7 +38,7 @@
         // Global configuration that can be overridden
         window.CLUBOS_API_ENDPOINT = window.CLUBOS_API_ENDPOINT || 'http://localhost:8000/process';
         window.CLUBOS_SLACK_ENDPOINT = window.CLUBOS_SLACK_ENDPOINT || 'http://localhost:8000/slack';
-        window.CLUBOS_MOCK_MODE = window.CLUBOS_MOCK_MODE !== undefined ? window.CLUBOS_MOCK_MODE : true;
+        window.CLUBOS_MOCK_MODE = window.CLUBOS_MOCK_MODE !== undefined ? window.CLUBOS_MOCK_MODE : false;
     </script>
 </head>
 <body>
@@ -77,6 +83,21 @@
                     >
                     <div class="form-helper">
                         Add location context if relevant to your task
+                    </div>
+                </div>
+
+                <!-- Priority Selector (Hidden by default, for future use) -->
+                <div class="form-group" id="priorityGroup" style="display: none;">
+                    <label class="form-label">Priority</label>
+                    <div class="priority-selector">
+                        <input type="radio" id="priority-low" name="priority" value="low">
+                        <label for="priority-low" class="priority-option">Low</label>
+                        
+                        <input type="radio" id="priority-medium" name="priority" value="medium" checked>
+                        <label for="priority-medium" class="priority-option">Medium</label>
+                        
+                        <input type="radio" id="priority-high" name="priority" value="high">
+                        <label for="priority-high" class="priority-option">High</label>
                     </div>
                 </div>
 
@@ -137,6 +158,14 @@
                 <!-- Error Message -->
                 <div id="errorMessage" class="error-message" data-bind="error"></div>
             </form>
+            
+            <!-- Recent Tasks (Hidden by default, enable via feature flag) -->
+            <div id="recentTasksSection" class="recent-tasks-section" style="display: none;">
+                <h3 class="recent-tasks-title">Recent Tasks</h3>
+                <div id="recentTasks" class="recent-tasks-container">
+                    <!-- Recent tasks will be populated here -->
+                </div>
+            </div>
         </div>
 
         <!-- Response Area -->
@@ -150,6 +179,9 @@
                     <div class="confidence-meter" id="confidenceMeter" data-bind="confidence-meter">
                         Confidence: <strong id="confidenceValue" data-bind="confidence-value">0%</strong>
                     </div>
+                    <button id="copyResponse" class="btn-copy" title="Copy response to clipboard" style="display: none;">
+                        Copy
+                    </button>
                 </div>
             </div>
             <div class="response-content" id="responseContent" data-bind="response-content">
@@ -171,6 +203,7 @@
     
     <!-- Load Core Modules -->
     <script src="scripts/config.js"></script>
+    <script src="scripts/utilities.js"></script>
     <script src="scripts/state.js"></script>
     <script src="scripts/telemetry.js"></script>
     <script src="scripts/optimizations.js"></script>
@@ -184,6 +217,7 @@
     <script src="llm/templateLoader.js"></script>
     <script src="llm/responseParser.js"></script>
     <script src="llm/llmDispatcher.js"></script>
+    <script src="llm/ToneWrapper.js"></script>
     
     <!-- Load Main Controllers -->
     <script src="scripts/ResponseManager.js"></script>

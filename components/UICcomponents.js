@@ -154,7 +154,7 @@ window.ClubOS.UI.Modal = class Modal {
 };
 
 // Notification Component
-window.ClubOS.UI.Notification = class Notification {
+window.ClubOS.UI.NotificationClass = class Notification {
     constructor(options = {}) {
         this.options = {
             message: options.message || '',
@@ -944,3 +944,16 @@ if (!document.querySelector('#clubos-component-styles')) {
     styleEl.textContent = componentStyles;
     document.head.appendChild(styleEl);
 }
+
+// Export static methods for easy access
+window.ClubOS.UI.Notification = {
+    show: (message, type, duration) => window.ClubOS.UI.NotificationClass.show(message, type, duration),
+    success: (message, duration) => window.ClubOS.UI.NotificationClass.success(message, duration),
+    error: (message, duration) => window.ClubOS.UI.NotificationClass.error(message, duration),
+    warning: (message, duration) => window.ClubOS.UI.NotificationClass.warning(message, duration),
+    info: (message, duration) => window.ClubOS.UI.NotificationClass.info(message, duration)
+};
+
+// Ensure Modal static methods are accessible
+window.ClubOS.UI.Modal.confirm = window.ClubOS.UI.Modal.confirm;
+window.ClubOS.UI.Modal.alert = window.ClubOS.UI.Modal.alert;
