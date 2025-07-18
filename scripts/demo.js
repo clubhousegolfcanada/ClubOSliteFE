@@ -40,12 +40,29 @@ window.ClubOS.Demo = {
             }
         }, window.ClubOS.CONFIG.DEMO_TIMEOUT);
         
-        // Get form elements
-        const form = window.ClubOS.FormManager.elements;
+        // Get form elements directly from DOM
+        const form = {
+            form: document.getElementById('taskForm'),
+            taskInput: document.getElementById('taskInput'),
+            locationInput: document.getElementById('locationInput'),
+            responseArea: document.getElementById('responseArea'),
+            resetBtn: document.getElementById('resetBtn'),
+            useLLM: document.getElementById('useLLM')
+        };
+        
+        // Validate elements exist
+        if (!form.taskInput || !form.form) {
+            console.error('Demo: Required form elements not found');
+            this.cancel();
+            alert('Demo initialization failed. Please refresh the page.');
+            return;
+        }
         
         // Clear any existing responses
         form.responseArea.style.display = 'none';
-        window.ClubOS.FormManager.hideError();
+        // Hide any errors
+        const errorEl = document.getElementById('errorMessage');
+        if (errorEl) errorEl.style.display = 'none';
         
         // Clear demo notices
         const existingNotices = form.responseArea.querySelectorAll('[data-demo-notice]');
@@ -129,13 +146,24 @@ window.ClubOS.Demo = {
     handleDemoSubmit() {
         console.log('Processing demo request for TrackMan issue...');
         
-        const form = window.ClubOS.FormManager.elements;
+        // Get form elements directly
+        const form = {
+            responseArea: document.getElementById('responseArea'),
+            resetBtn: document.getElementById('resetBtn')
+        };
         
         // Show loading state
-        window.ClubOS.FormManager.setLoadingState(true);
+        if (window.ClubOS.AppController) {
+            window.ClubOS.AppController.setProcessingState(true);
+        }
         
         // Create progress bar
-        const progressBar = window.ClubOS.FormManager.createProgressBar();
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        document.body.appendChild(progressBar);
+        requestAnimationFrame(() => {
+            progressBar.style.width = '80%';
+        });
         
         // Let loading animation show for a moment
         setTimeout(() => {
@@ -149,10 +177,16 @@ window.ClubOS.Demo = {
                 }
             
             // Complete progress
-            window.ClubOS.FormManager.removeProgressBar(progressBar);
+            progressBar.style.width = '100%';
+            setTimeout(() => {
+                progressBar.style.opacity = '0';
+                setTimeout(() => progressBar.remove(), 300);
+            }, 200);
             
             // Reset state
-            window.ClubOS.FormManager.setLoadingState(false);
+            if (window.ClubOS.AppController) {
+                window.ClubOS.AppController.setProcessingState(false);
+            }
             
             // Reset card shadow
             document.querySelector('.card').style.boxShadow = '';
@@ -178,7 +212,9 @@ window.ClubOS.Demo = {
             };
             
             console.log('Demo Response:', demoResponse);
-            window.ClubOS.FormManager.displayResponse(demoResponse);
+            if (window.ClubOS.ResponseManager) {
+                window.ClubOS.ResponseManager.display(demoResponse);
+            }
             
             // Add demo notice
             const demoNotice = document.createElement('div');

@@ -3,58 +3,11 @@
  * Quick implementation of key optimizations
  */
 
-// 1. Centralized DOM Cache
-window.ClubOS.DOMCache = {
-    elements: new Map(),
-    
-    get(selector) {
-        if (!this.elements.has(selector)) {
-            const element = document.querySelector(selector);
-            if (element) {
-                this.elements.set(selector, element);
-            }
-        }
-        return this.elements.get(selector);
-    },
-    
-    getById(id) {
-        const key = `#${id}`;
-        if (!this.elements.has(key)) {
-            const element = document.getElementById(id);
-            if (element) {
-                this.elements.set(key, element);
-            }
-        }
-        return this.elements.get(key);
-    },
-    
-    clear() {
-        this.elements.clear();
-    }
-};
+// Note: DOMCache is already implemented in utilities.js
+// We'll use that implementation instead of duplicating
 
-// 2. Debounce Utility
-window.ClubOS.Utils = window.ClubOS.Utils || {};
-
-window.ClubOS.Utils.debounce = function(fn, delay = 300) {
-    let timeoutId;
-    return function(...args) {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => fn.apply(this, args), delay);
-    };
-};
-
-// 3. Throttle Utility
-window.ClubOS.Utils.throttle = function(fn, limit = 100) {
-    let inThrottle;
-    return function(...args) {
-        if (!inThrottle) {
-            fn.apply(this, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-};
+// Note: Debounce and throttle utilities are already implemented in utilities.js
+// We'll use those implementations instead of duplicating
 
 // 4. API Response Cache
 window.ClubOS.APICache = {
@@ -113,7 +66,7 @@ window.ClubOS.EventDelegator = {
         
         // Single input listener with debouncing
         document.addEventListener('input', 
-            window.ClubOS.Utils.debounce(this.handleInput.bind(this), 300)
+            window.ClubOS.debounce(this.handleInput.bind(this), 300)
         );
     },
     
@@ -245,50 +198,8 @@ window.ClubOS.Performance = {
     }
 };
 
-// 8. Optimized Storage Wrapper
-window.ClubOS.Storage = {
-    async get(key) {
-        return new Promise((resolve) => {
-            // Async to prevent blocking
-            setTimeout(() => {
-                try {
-                    const value = localStorage.getItem(key);
-                    resolve(value ? JSON.parse(value) : null);
-                } catch (e) {
-                    console.error('Storage get error:', e);
-                    resolve(null);
-                }
-            }, 0);
-        });
-    },
-    
-    async set(key, value) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                try {
-                    localStorage.setItem(key, JSON.stringify(value));
-                    resolve(true);
-                } catch (e) {
-                    console.error('Storage set error:', e);
-                    resolve(false);
-                }
-            }, 0);
-        });
-    },
-    
-    async remove(key) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                try {
-                    localStorage.removeItem(key);
-                    resolve(true);
-                } catch (e) {
-                    resolve(false);
-                }
-            }, 0);
-        });
-    }
-};
+// Note: Storage wrapper is already implemented in utilities.js
+// We'll use that implementation instead of duplicating
 
 // 9. Request Animation Frame Queue
 window.ClubOS.RAF = {

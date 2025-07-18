@@ -24,11 +24,20 @@
     <!-- Early theme detection to prevent flash -->
     <script>
         (function() {
-            const savedTheme = localStorage.getItem('clubos-theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            const metaTheme = document.querySelector('meta[name="theme-color"]');
-            if (metaTheme) {
-                metaTheme.content = savedTheme === 'dark' ? '#0a0a0a' : '#ffffff';
+            try {
+                const savedTheme = localStorage.getItem('clubos-theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const metaTheme = document.querySelector('meta[name="theme-color"]');
+                if (metaTheme) {
+                    metaTheme.content = savedTheme === 'dark' ? '#0a0a0a' : '#ffffff';
+                }
+            } catch (e) {
+                // Fallback to dark theme if localStorage is unavailable
+                document.documentElement.setAttribute('data-theme', 'dark');
+                const metaTheme = document.querySelector('meta[name="theme-color"]');
+                if (metaTheme) {
+                    metaTheme.content = '#0a0a0a';
+                }
             }
         })();
     </script>
@@ -224,7 +233,7 @@
     <script src="scripts/AppController.js"></script>
     
     <!-- Main App Entry Point -->
-    <script type="module" src="scripts/app.js"></script>
+    <script src="scripts/app.js"></script>
     
     <!-- Minimal initialization - just focus the input -->
     <script>

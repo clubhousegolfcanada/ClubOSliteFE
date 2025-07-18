@@ -613,6 +613,53 @@ const initStyles = `
     border-top: 1px solid var(--border-secondary);
     color: var(--text-muted);
 }
+
+/* Progress bar styles */
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--accent);
+    width: 0;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    z-index: 10000;
+}
+
+/* Offline banner styles */
+.offline-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--status-warning);
+    color: white;
+    padding: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+    z-index: 9999;
+}
+
+.offline-banner.show {
+    transform: translateY(0);
+}
+
+.offline-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.offline-dot {
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
 `;
 
 // Inject init styles
